@@ -33,7 +33,7 @@ Open the Console in your browser and select the organisation `{{ORG_NAME}}`.
 ### 1.1 Get the app and make it a Git repository
 
 ```bash
-cp -r <path-to-this-repo>/demos/python-app ~/cc-python-<your-name>
+cp -r <session-folder>/demos/python-app ~/cc-python-<your-name>
 cd ~/cc-python-<your-name>
 git init
 git add .
@@ -198,7 +198,7 @@ kubectl get nodes
 
 ```bash
 kubectl create namespace <your-name>
-kubectl apply -n <your-name> -f <path-to-this-repo>/demos/k8s/whoami.yaml
+kubectl apply -n <your-name> -f <session-folder>/demos/k8s/whoami.yaml
 kubectl get deploy,pods,svc -n <your-name> -o wide
 ```
 
