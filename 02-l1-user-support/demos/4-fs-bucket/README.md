@@ -4,9 +4,14 @@ The app can store files (`POST /files`) and list them (`GET /files`).
 
 ## Step 1 — See the problem
 
-Apply the overlay and deploy, then:
+Apply the release and deploy, then:
 
 ```bash
+cd ~/cc-support-<your-name>
+cp -R $LAB/demos/4-fs-bucket/files/. .
+git add -A && git commit -m "v4"
+clever deploy
+
 curl -X POST --data "invoice 42" https://<your-app-domain>/files
 curl https://<your-app-domain>/files      # the file is there
 clever restart
@@ -20,7 +25,7 @@ Why? (Think of Session 1: what happens to an instance at each deployment?)
 An **FS Bucket** is a network file system, mounted into the application's folder at start.
 
 ```bash
-clever addon create fs-bucket fs-<your-name> --org {{ORG_NAME}} --region {{ZONE}}
+clever addon create fs-bucket fs-<your-name> --org {{ORG_NAME}}
 clever service link-addon fs-<your-name>
 clever addon env <addon-id>         # note the bucket host: bucket-…-fsbucket.<domain>
 clever env set CC_FS_BUCKET /uploads:<bucket-host>

@@ -41,9 +41,9 @@ A ticket can change kind while you qualify it: "I need a VM" (request) often hid
 | Situation | Command | What you look for |
 |-----------|---------|-------------------|
 | Any app issue | `clever status` · `clever activity` | Running or not, last deployments and their result |
-| Deployment failed | `clever logs --deployment-id <id>` (or the Console's deployment logs) | The step that failed and its error |
-| App errors at runtime | `clever logs --since 1h` | Stack traces, restarts |
-| HTTP errors, slowness | `clever accesslogs --since 1h` | Status codes, response times, which paths |
+| Deployment failed | `clever logs --deployment-id <id> --until now` (or the Console's deployment logs) | The step that failed and its error |
+| App errors at runtime | `clever logs --since 1h --until now` | Stack traces, restarts |
+| HTTP errors, slowness | `clever accesslogs --since 1h --until now` | Status codes, response times, which paths |
 | CLI problem | `clever diag` · `clever version` | Version, OS, configuration, API host |
 | CKE workload | `kubectl get pods -n <ns>` · `kubectl describe pod <pod> -n <ns>` · `kubectl get events -n <ns>` | Status (Pending, CrashLoopBackOff…) and its reason |
 
@@ -62,4 +62,4 @@ Generic matrix — replace with your organisation's scale (`{{PRIORITY_SCALE}}`)
 - **Answer it yourself (L1):** questions, requests covered by self-service and the docs, incidents caused by the user's app or configuration with a known fix.
 - **Hand over to L2:** incidents you can't explain after qualification, advanced troubleshooting, anything needing deeper platform access.
 - **Platform team:** CKE cluster capacity, node groups, quotas, namespaces and access; organisation-level settings.
-- **Escalate to L3 (Clever Cloud):** suspected platform defect or platform-wide incident — through `{{L3_CONTACT}}`, with a complete escalation (see `escalation-template.md`).
+- **Escalate to L3 (Clever Cloud):** suspected platform defect or platform-wide incident — through `{{L3_CONTACT}}`, with a complete escalation: what you checked, the evidence, what you need.

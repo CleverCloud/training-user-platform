@@ -13,12 +13,13 @@ import os
 import platform
 from datetime import datetime, timezone
 
-import pg8000.native
+import psycopg
 from flask import Flask, jsonify, request
 
 VERSION = "v1"
 
 app = Flask(__name__)
+app.url_map.strict_slashes = False  # /db and /db/ both work
 
 APP_HOME = os.environ.get("APP_HOME", os.getcwd())
 UPLOAD_DIR = os.path.join(APP_HOME, os.environ.get("UPLOAD_DIR", "uploads"))
@@ -33,12 +34,13 @@ def instance_info():
 
 
 def connect():
-    return pg8000.native.Connection(
+    return psycopg.connect(
         host=os.environ["POSTGRESQL_ADDON_HOST"],
         port=int(os.environ.get("POSTGRESQL_ADDON_PORT", "5432")),
-        database=os.environ["POSTGRESQL_ADDON_DB"],
+        dbname=os.environ["POSTGRESQL_ADDON_DB"],
         user=os.environ["POSTGRESQL_ADDON_USER"],
         password=os.environ["POSTGRESQL_ADDON_PASSWORD"],
+        autocommit=True,
     )
 
 
@@ -57,15 +59,12 @@ def db():
     if not os.environ.get("POSTGRESQL_ADDON_HOST"):
         return jsonify(error="No database configured: POSTGRESQL_ADDON_HOST is not set. "
                              "Is a PostgreSQL add-on linked, and was the app restarted?"), 503
-    conn = connect()
-    try:
-        conn.run("CREATE TABLE IF NOT EXISTS visits (id SERIAL PRIMARY KEY, "
-                 "at TIMESTAMPTZ NOT NULL DEFAULT now(), instance TEXT)")
-        conn.run("INSERT INTO visits (instance) VALUES (:i)", i=instance_info()["number"])
-        count = conn.run("SELECT count(*) FROM visits")[0][0]
+    with connect() as conn:  # closed at the end of the block
+        conn.execute("CREATE TABLE IF NOT EXISTS visits (id SERIAL PRIMARY KEY, "
+                     "at TIMESTAMPTZ NOT NULL DEFAULT now(), instance TEXT)")
+        conn.execute("INSERT INTO visits (instance) VALUES (%s)", (instance_info()["number"],))
+        count = conn.execute("SELECT count(*) FROM visits").fetchone()[0]
         return jsonify(visits=count, instance=instance_info()["number"])
-    finally:
-        conn.close()
 
 
 @app.get("/files")

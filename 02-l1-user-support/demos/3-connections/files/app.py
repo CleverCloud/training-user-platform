@@ -13,12 +13,13 @@ import os
 import platform
 from datetime import datetime, timezone
 
-import pg8000.native
+import psycopg
 from flask import Flask, jsonify, request
 
 VERSION = "v3"
 
 app = Flask(__name__)
+app.url_map.strict_slashes = False  # /db and /db/ both work
 
 _connections = []  # connections kept open "for reuse"
 
@@ -35,12 +36,13 @@ def instance_info():
 
 
 def connect():
-    return pg8000.native.Connection(
+    return psycopg.connect(
         host=os.environ["POSTGRESQL_ADDON_HOST"],
         port=int(os.environ.get("POSTGRESQL_ADDON_PORT", "5432")),
-        database=os.environ["POSTGRESQL_ADDON_DB"],
+        dbname=os.environ["POSTGRESQL_ADDON_DB"],
         user=os.environ["POSTGRESQL_ADDON_USER"],
         password=os.environ["POSTGRESQL_ADDON_PASSWORD"],
+        autocommit=True,
     )
 
 
@@ -62,10 +64,10 @@ def db():
     # "Performance improvement": keep connections open for reuse later.
     conn = connect()
     _connections.append(conn)
-    conn.run("CREATE TABLE IF NOT EXISTS visits (id SERIAL PRIMARY KEY, "
-             "at TIMESTAMPTZ NOT NULL DEFAULT now(), instance TEXT)")
-    conn.run("INSERT INTO visits (instance) VALUES (:i)", i=instance_info()["number"])
-    count = conn.run("SELECT count(*) FROM visits")[0][0]
+    conn.execute("CREATE TABLE IF NOT EXISTS visits (id SERIAL PRIMARY KEY, "
+                 "at TIMESTAMPTZ NOT NULL DEFAULT now(), instance TEXT)")
+    conn.execute("INSERT INTO visits (instance) VALUES (%s)", (instance_info()["number"],))
+    count = conn.execute("SELECT count(*) FROM visits").fetchone()[0]
     return jsonify(visits=count, instance=instance_info()["number"], open_connections=len(_connections))
 
 

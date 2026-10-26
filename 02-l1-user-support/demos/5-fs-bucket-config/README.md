@@ -5,9 +5,10 @@
 Apply the overlay, then the team's new configuration, then deploy (from your app folder):
 
 ```bash
-cp -R <session-folder>/demos/5-fs-bucket-config/files/. .
-git add -A && git commit -m "release 5"
-bash <session-folder>/demos/5-fs-bucket-config/configure.sh
+cd ~/cc-support-<your-name>
+cp -R $LAB/demos/5-fs-bucket-config/files/. .
+git add -A && git commit -m "v5"
+bash $LAB/demos/5-fs-bucket-config/configure.sh
 clever deploy
 ```
 

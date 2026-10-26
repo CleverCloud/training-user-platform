@@ -10,10 +10,11 @@ One application, deployed once, then changed scenario after scenario — exactly
 | [`4-fs-bucket/`](4-fs-bucket/) | "My files disappear": add an FS Bucket | Apply the overlay, see the problem, configure an FS Bucket |
 | [`5-fs-bucket-config/`](5-fs-bucket-config/) | Ticket: "files vanish again" | Apply the overlay and the team's configuration, deploy, investigate |
 
-**Applying an overlay** (from your app folder):
+**Applying an overlay** (from your app folder; `$LAB` is this session's folder, see `lab.md`):
 
 ```bash
-cp -R <session-folder>/demos/<scenario>/files/. .
+cd ~/cc-support-<your-name>
+cp -R $LAB/demos/<scenario>/files/. .
 git add -A && git commit -m "<scenario>"
 clever deploy
 ```

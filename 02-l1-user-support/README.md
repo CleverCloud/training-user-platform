@@ -13,9 +13,6 @@ Support L1 training, hands-on: a developer opens a ticket, you qualify it, then 
 | [`demos/`](demos/) | The app (`1-base/`) and the overlays for scenarios 2 to 5 |
 | [`handouts/qualification-checklist.md`](handouts/qualification-checklist.md) | The questions to ask, and the identifiers to collect, for any platform ticket |
 | [`handouts/ticket-template.md`](handouts/ticket-template.md) | What a qualified ticket contains |
-| [`handouts/needs-map.md`](handouts/needs-map.md) | "I need…" → what the platform offers |
-| [`handouts/escalation-template.md`](handouts/escalation-template.md) | What to send when you escalate to L2 or L3 |
-| [`paper-exercises.md`](paper-exercises.md) | Role-play and writing exercises, without a computer |
 | [`slides/`](slides/) | The session's slides, in English and French (PDF) |
 
 Placeholders such as `{{ORG_NAME}}`, `{{L3_CONTACT}}` or `{{TICKET_TOOL}}` depend on your organisation: your trainer gives you the values.
